@@ -1,0 +1,91 @@
+import java.io.*;
+import java.util.*;
+
+public class Main {
+	
+	static int N, T;
+	static int Map[][];
+	static int Distance[][];
+
+	static class Info implements Comparable<Info>{
+		int x, y, cost;
+		Info(int x, int y, int w){
+			this.x = x;
+			this.y = y;
+			this.cost = w;
+		}
+		@Override
+		public int compareTo(Info o) {
+			return Integer.compare(cost, o.cost);
+		}
+		
+	}
+	
+	public static void main(String[] args) throws Exception {
+		input();
+		System.out.println(solution());
+	}
+
+	public static void input() throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		N = Integer.parseInt(st.nextToken());
+		T = Integer.parseInt(st.nextToken());
+		Map = new int[N][N];
+		Distance = new int[N][N];
+		
+		for(int i = 0; i<N; ++i) {
+			st = new StringTokenizer(br.readLine());
+			for(int j = 0; j<N; ++j) {
+				Map[i][j] = Integer.parseInt(st.nextToken());
+			}
+			
+			Arrays.fill(Distance[i], Integer.MAX_VALUE);
+		}
+		
+		Distance[0][0] = 0;
+	}
+
+	
+	static final int[] dx = {-1, 0, 1, 0, -3, 0, 3, 0, -2, -2, -1, -1, 1, 1, 2, 2};
+	static final int[] dy = {0, 1, 0, -1, 0, 3, 0, -3, -1, 1, -2, 2, -2, 2, -1, 1};
+	
+	public static int solution() {
+		int ans = Integer.MAX_VALUE;
+		
+		PriorityQueue<Info> pq = new PriorityQueue<>();
+		pq.add(new Info(0,0,0));
+		
+		while(!pq.isEmpty()) {
+			Info now = pq.poll();
+			int x = now.x;
+			int y = now.y;
+			int cost = now.cost;
+			
+			int move = N-1-x + N-1-y;
+			if(move < 3) {
+				ans = Math.min(ans, cost + move*T);
+			}
+			
+			for(int i = 0; i<16; ++i) {
+				int nx = x+dx[i];
+				int ny = y+dy[i];
+				if(!isIn(nx, ny)) continue;
+				int newCost = Map[nx][ny] + cost + T*3;
+				if(Distance[nx][ny] > newCost) {
+					Distance[nx][ny] = newCost;
+					pq.add(new Info(nx, ny, newCost));
+				}
+				
+			}
+			
+		}
+		
+		return ans;
+	}
+	
+	public static boolean isIn(int x, int y) {
+		return x>=0&&y>=0&&x<N&y<N;
+	}
+	
+}

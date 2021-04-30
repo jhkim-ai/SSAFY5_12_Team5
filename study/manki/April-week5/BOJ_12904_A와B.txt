@@ -1,0 +1,36 @@
+import java.io.*;
+import java.util.*;
+
+public class Main{
+
+	static String S, T;
+	
+	public static void main(String[] args) throws Exception {
+		input();
+		System.out.println(solution());
+	}
+
+	public static void input() throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		S = br.readLine();
+		T = br.readLine();
+	}
+
+	public static int solution() {
+		
+		StringBuilder t = new StringBuilder(T);
+		
+		while(S.length() < t.length()) {
+			if(t.charAt(t.length()-1) == 'A') t.setLength(t.length()-1);
+			else {
+				t.setLength(t.length()-1);
+				t.reverse();
+			}
+		}
+		
+		if(S.equals(t.toString())) return 1;
+		
+		return 0;
+	}
+	
+}
